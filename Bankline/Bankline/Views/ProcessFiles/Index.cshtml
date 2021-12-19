@@ -1,0 +1,25 @@
+﻿@model BankStatementDefaultModel;
+
+<h1>Resultado das transações</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Data</th>
+            <th scope="col">Tipo da Transação</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model.Transacoes)
+        {
+            <tr>
+                <th scope="row">@transaction.Date</th>
+                <td>@transaction.Type</td>
+                <td>@transaction.Valor</td>
+                <td>@transaction.Descricao</td>
+            </tr>
+        }
+    </tbody>
+</table>
