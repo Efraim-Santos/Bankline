@@ -8,14 +8,17 @@ using Bankline.Models;
 using Bankline.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
+using Bankline.Repository;
 
 namespace Bankline.Controllers
 {
     public class ProcessFiles : BaseController
     {
-        public ProcessFiles(IHostingEnvironment _appEnvironment) : base(_appEnvironment)
+        private readonly IBankStatementRepository _bankRepository;
+        public ProcessFiles(IHostingEnvironment _appEnvironment,
+                            IBankStatementRepository repository) : base(_appEnvironment)
         {
-
+            _bankRepository = repository;
         }
         public IActionResult Index()
         {
@@ -27,7 +30,7 @@ namespace Bankline.Controllers
             var listExtract = ReadFiles();
 
             var selectDistinct = (from t in listExtract.Transacoes
-                          select new { t.TRNTYPE, t.DTPOSTED, t.TRNAMT, t.MEMO }).Distinct();
+                                  select new { t.TRNTYPE, t.DTPOSTED, t.TRNAMT, t.MEMO }).Distinct();
 
             var listDefaultExtract = new BankStatementDefaultViewModel();
 
@@ -42,7 +45,7 @@ namespace Bankline.Controllers
                 });
             }
             listDefaultExtract.Transacoes.OrderBy(t => t.Date);
-            
+            CreatedDBNewRegisterOfExtractBank(listDefaultExtract.Transacoes);
             return View("Index", listDefaultExtract);
         }
         private BankStatement ReadFiles()
@@ -85,6 +88,33 @@ namespace Bankline.Controllers
         private static string GetValueProperty(string propertyName, string line)
         {
             return line.Replace($"<{propertyName}>", string.Empty);
+        }
+
+        [HttpPost]
+        public IActionResult CreatedDBNewRegisterOfExtractBank(List<TransactionDefaultViewModel> bankStatement)
+        {
+            var newBankStatement = new BankStatementModel();
+
+            newBankStatement.StatementPeriod = $"Account balance report for the period {bankStatement.FirstOrDefault().Date} to {bankStatement.LastOrDefault().Date}";
+
+            newBankStatement.Transacoes = new List<TransactionModel>();
+
+            foreach (var transaction in bankStatement)
+            {
+                newBankStatement.Transacoes.Add(new TransactionModel()
+                {
+                    Type = transaction.Type,
+                    Date = transaction.Date,
+                    Valor = transaction.Valor,
+                    Descricao = transaction.Descricao
+                });
+            }
+            
+            _bankRepository.Adicionar(newBankStatement);
+            
+            ViewData["Sucess"] = "Arquivos foram incluidos com sucesso!";
+            
+            return View("Index");
         }
 
     }

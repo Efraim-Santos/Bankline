@@ -16,9 +16,8 @@ namespace Bankline.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ////modelBuilder.ApplyConfigurationsFromAssembly(typeof(BankLineDbContext).Assembly);
-            //modelBuilder.Entity<BankStatementModel>().HasKey(m => m.Id);
-            //modelBuilder.Entity<TransactionModel>().HasKey(m => m.Id);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BankStatementModel).Assembly);
+
             base.OnModelCreating(modelBuilder);
         }
     }

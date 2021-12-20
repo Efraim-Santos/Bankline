@@ -1,7 +1,9 @@
 using Bankline.Data;
+using Bankline.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,15 +28,15 @@ namespace Bankline
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<ApplicationDbContext>();
-
-            var connection = Configuration["ConexaoSqlite:SqliteConnectionString"];
-
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<BankDbContext>(options =>
-             options.UseSqlite(connection));
+             options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddScoped<IBankStatementRepository, BankStatementRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -2,6 +2,17 @@
 
 <h1>Resultado das transações</h1>
 
+<form asp-controller="ProcessFiles" asp-action="CreatedDBNewRegisterOfExtractBank" enctype="multipart/form-data" method="post">
+    @for (int i = 0; i < Model.Transacoes.Count; i++)
+    {
+        <input type="hidden" name="type" value="@Model.Transacoes[i].Type" />
+        <input type="hidden" name="date" value="@Model.Transacoes[i].Date">
+        <input type="hidden" name="valor" value="@Model.Transacoes[i].Valor">
+        <input type="hidden" name="descricao" value="@Model.Transacoes[i].Descricao">
+    }
+    <input type="submit" class="btn btn-primary" value="Salvar Dados">
+</form>
+
 <table class="table">
     <thead>
         <tr>
