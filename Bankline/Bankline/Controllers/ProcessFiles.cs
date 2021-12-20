@@ -29,11 +29,11 @@ namespace Bankline.Controllers
             var selectDistinct = (from t in listExtract.Transacoes
                           select new { t.TRNTYPE, t.DTPOSTED, t.TRNAMT, t.MEMO }).Distinct();
 
-            var listDefaultExtract = new BankStatementDefaultModel();
+            var listDefaultExtract = new BankStatementDefaultViewModel();
 
             foreach (var transaction in selectDistinct)
             {
-                listDefaultExtract.Transacoes.Add(new TransactionDefaultModel
+                listDefaultExtract.Transacoes.Add(new TransactionDefaultViewModel
                 {
                     Type = transaction.TRNTYPE.Equals("DEBIT") ? "Débito" : "Crédito",
                     Date = DateTime.ParseExact(transaction.DTPOSTED.Split("[")[0], "yyyyMMddHHmmss", CultureInfo.InvariantCulture),

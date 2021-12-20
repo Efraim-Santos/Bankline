@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Bankline.Models
 {
-    public class TransactionDefaultModel
+    public class TransactionDefaultViewModel
     {
         /// <summary>
         /// Tipo de transação: Débito ou crédito
