@@ -16,7 +16,7 @@ namespace Bankline.Controllers
 
         }
         public IActionResult Index()
-        {
+            {
             return View();
         }
 

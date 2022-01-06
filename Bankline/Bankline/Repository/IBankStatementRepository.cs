@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Bankline.Repository
 {
-    public interface IBankStatementRepository : IDisposable
+    public interface IBankStatementRepository
     {
-        Task Adicionar(BankStatementModel bankStatement);
-        Task<List<BankStatementModel>> ObterTodos();
-        Task<int> SaveChagens();
+        Task AddNew(BankStatementModel bankStatement);
+        Task<List<BankStatementModel>> GetAll();
     }
 }

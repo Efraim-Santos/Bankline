@@ -18,11 +18,11 @@ namespace Bankline.Models
         /// <summary>
         /// Valor (será negativo quando a transação for debito
         /// </summary>
-        public decimal Valor { get; set; }
+        public decimal Value { get; set; }
         /// <summary>
         /// Descrição da transção
         /// </summary>
-        public string Descricao { get; set; }
+        public string Description { get; set; }
 
     }
 }

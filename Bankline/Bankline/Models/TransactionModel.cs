@@ -11,8 +11,8 @@ namespace Bankline.Models
        
         public DateTime Date { get; set; }
        
-        public decimal Valor { get; set; }
+        public decimal Value { get; set; }
 
-        public string Descricao { get; set; }
+        public string Description { get; set; }
     }
 }

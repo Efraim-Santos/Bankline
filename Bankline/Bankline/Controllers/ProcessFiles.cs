@@ -27,7 +27,7 @@ namespace Bankline.Controllers
         [HttpGet]
         public IActionResult OrganizarAsContas()
         {
-            var listExtract = ReadFiles();
+            var listExtract = ReadFiles.ReadAll(GetPathRootFiles());
 
             var selectDistinct = (from t in listExtract.Transacoes
                                   select new { t.TRNTYPE, t.DTPOSTED, t.TRNAMT, t.MEMO }).Distinct();
@@ -40,82 +40,41 @@ namespace Bankline.Controllers
                 {
                     Type = transaction.TRNTYPE.Equals("DEBIT") ? "Débito" : "Crédito",
                     Date = DateTime.ParseExact(transaction.DTPOSTED.Split("[")[0], "yyyyMMddHHmmss", CultureInfo.InvariantCulture),
-                    Valor = Convert.ToDecimal(transaction.TRNAMT.Replace("-", "").Replace(".", ",")),
-                    Descricao = transaction.MEMO.Trim()
+                    Value = Convert.ToDecimal(transaction.TRNAMT.Replace("-", "").Replace(".", ",")),
+                    Description = transaction.MEMO.Trim()
                 });
             }
             listDefaultExtract.Transacoes.OrderBy(t => t.Date);
-            CreatedDBNewRegisterOfExtractBank(listDefaultExtract.Transacoes);
+
             return View("Index", listDefaultExtract);
-        }
-        private BankStatement ReadFiles()
-        {
-            var extract = new BankStatement();
-
-            string line;
-
-            string pathAllFiles = $"{GetPathRootFiles()}\\ExtratosImportados\\";
-
-            var pathArchives = Directory.GetFiles(pathAllFiles);
-
-            foreach (var path in pathArchives)
-            {
-                StreamReader sr = System.IO.File.OpenText(path);
-
-                while ((line = sr.ReadLine()) != null)
-                {
-                    line = line.Trim();
-
-                    if (line.OpenTag(Tags.Transacao))
-                    {
-                        var transacaoCorrente = new Transaction();
-
-                        while (!(line = sr.ReadLine()).ClosedTag(Tags.Transacao))
-                        {
-                            var tagNameCurrent = GetTag.Name(line);
-                            var valueTagNameCurrent = GetValueProperty(tagNameCurrent, line);
-                            transacaoCorrente = SetValue.Transaction(transacaoCorrente, tagNameCurrent, valueTagNameCurrent);
-                        }
-
-                        extract.Transacoes.Add(transacaoCorrente);
-                    }
-                }
-                sr.Close();
-            }
-
-            return extract;
-        }
-        private static string GetValueProperty(string propertyName, string line)
-        {
-            return line.Replace($"<{propertyName}>", string.Empty);
         }
 
         [HttpPost]
-        public IActionResult CreatedDBNewRegisterOfExtractBank(List<TransactionDefaultViewModel> bankStatement)
+        public ActionResult CreatedDBNewRegisterOfExtractBank([FromBody] BankStatement viewModel)
         {
-            var newBankStatement = new BankStatementModel();
-
-            newBankStatement.StatementPeriod = $"Account balance report for the period {bankStatement.FirstOrDefault().Date} to {bankStatement.LastOrDefault().Date}";
-
-            newBankStatement.Transacoes = new List<TransactionModel>();
-
-            foreach (var transaction in bankStatement)
+            var newBankStatementModel = new BankStatementModel()
             {
-                newBankStatement.Transacoes.Add(new TransactionModel()
+                Transacoes = new List<TransactionModel>()
+            };
+
+            foreach (var transaction in viewModel.Transacoes)
+            {
+                newBankStatementModel.Transacoes.Add(new TransactionModel
                 {
-                    Type = transaction.Type,
-                    Date = transaction.Date,
-                    Valor = transaction.Valor,
-                    Descricao = transaction.Descricao
+                    Type = transaction.TRNTYPE,
+                    Date = DateTime.Parse(transaction.DTPOSTED),
+                    Value = Convert.ToDecimal(transaction.TRNAMT),
+                    Description = transaction.MEMO
                 });
             }
-            
-            _bankRepository.Adicionar(newBankStatement);
-            
-            ViewData["Sucess"] = "Arquivos foram incluidos com sucesso!";
-            
-            return View("Index");
-        }
 
+            newBankStatementModel.StatementPeriod = $"Account balance report for the period {viewModel.Transacoes.FirstOrDefault().DTPOSTED} to {viewModel.Transacoes.LastOrDefault().DTPOSTED}";
+
+            //_bankRepository.AddNew(newBankStatementModel);
+
+            ViewData["Sucess"] = "Arquivos foram incluidos com sucesso!";
+
+            return Json(new { success = true, message = "Arquivos foram incluidos com sucesso!", status = 200 });
+        }
     }
 }

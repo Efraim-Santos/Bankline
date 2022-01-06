@@ -2,16 +2,9 @@
 
 <h1>Resultado das transações</h1>
 
-<form asp-controller="ProcessFiles" asp-action="CreatedDBNewRegisterOfExtractBank" enctype="multipart/form-data" method="post">
-    @for (int i = 0; i < Model.Transacoes.Count; i++)
-    {
-        <input type="hidden" name="type" value="@Model.Transacoes[i].Type" />
-        <input type="hidden" name="date" value="@Model.Transacoes[i].Date">
-        <input type="hidden" name="valor" value="@Model.Transacoes[i].Valor">
-        <input type="hidden" name="descricao" value="@Model.Transacoes[i].Descricao">
-    }
-    <input type="submit" class="btn btn-primary" value="Salvar Dados">
-</form>
+<partial name="~/Views/Shared/Partial/LoadValidationMessage.cshtml" />
+
+<input type="button" class="btn btn-primary" id="salvar" value="Salvar Dados">
 
 <table class="table">
     <thead>
@@ -22,15 +15,68 @@
             <th scope="col">Descrição</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var transaction in Model.Transacoes)
-        {
+    @if (Model.Transacoes.Count > 0)
+    {
+        <tbody>
+            @foreach (var transaction in Model.Transacoes)
+            {
+                <tr>
+                    <th scope="row">@transaction.Date</th>
+                    <td>@transaction.Type</td>
+                    <td>@transaction.Value</td>
+                    <td>@transaction.Description</td>
+                </tr>
+            }
+        </tbody>
+    }
+    else
+    {
+        <tbody>
             <tr>
-                <th scope="row">@transaction.Date</th>
-                <td>@transaction.Type</td>
-                <td>@transaction.Valor</td>
-                <td>@transaction.Descricao</td>
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
-        }
-    </tbody>
+        </tbody>
+    }
+
 </table>
+
+<script>
+    var buttonSave = document.querySelector('#salvar').addEventListener("click", function (event) {
+
+        var dataTable = document.querySelectorAll('.table tbody tr');
+        var bankStatement = [];
+
+        for (var i = 0; i < dataTable.length; i++) {
+
+            var childernLine = dataTable[i].children;
+
+            bankStatement.push({
+                Trntype: childernLine[1].innerHTML,
+                Dtposted: childernLine[0].innerHTML,
+                Trnamt: childernLine[2].innerHTML,
+                Memo: childernLine[3].innerHTML
+            });
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/ProcessFiles/CreatedDBNewRegisterOfExtractBank",
+            data: JSON.stringify({ Transacoes: bankStatement }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                console.log("sucesso");
+                console.log(result);
+                location.href = '@Url.Action("Index","UploadFiles")';
+            },
+            error: function (ex) {
+                console.log("erro");
+                console.log(ex)
+            }
+        });
+    });
+
+</script>

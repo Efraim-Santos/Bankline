@@ -9,5 +9,6 @@ namespace Bankline.Models
     {
         public ICollection<TransactionModel> Transacoes { get; set; }
         public string StatementPeriod { get; set; }
+        public DateTime RegisterDate { get; set; }
     }
 }
