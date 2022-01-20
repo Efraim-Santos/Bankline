@@ -34,7 +34,10 @@ namespace Bankline.Repository
         {
             return await DbSet.ToListAsync();
         }
-
+        public virtual async Task<TEntity> GetById(int id)
+        {
+            return await DbSet.FindAsync(id);
+        }
         public virtual async Task<int> SaveChagens()
         {
             return await _bankDbContext.SaveChangesAsync();

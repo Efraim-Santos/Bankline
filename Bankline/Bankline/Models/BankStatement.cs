@@ -7,10 +7,10 @@ namespace Bankline.Models
 {
     public class BankStatement
     {
-        public List<Transaction> Transacoes { get; set; }
+        public List<Transaction> AllTransaction { get; set; }
         public BankStatement()
         {
-            Transacoes = new List<Transaction>();
+            AllTransaction = new List<Transaction>();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Bankline.Models
 {
     public class BankStatementModel : Entity
     {
-        public ICollection<TransactionModel> Transacoes { get; set; }
+        public ICollection<TransactionModel> Transaction { get; set; }
         public string StatementPeriod { get; set; }
         public DateTime RegisterDate { get; set; }
     }

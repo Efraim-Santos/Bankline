@@ -14,5 +14,14 @@ namespace Bankline.Repository
         {
 
         }
+
+        public async Task<BankStatementModel> GetBankStatementByID(int id)
+        {
+            return await _bankDbContext
+                    .BankStatement
+                    .Include(b => b.Transaction)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(b => b.Id == id);
+        }
     }
 }

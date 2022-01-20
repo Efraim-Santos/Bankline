@@ -13,10 +13,4 @@ namespace Bankline.Models
             Transacoes = new List<TransactionDefaultViewModel>();
         }
     }
-
-    //public class BankTest
-    //{
-    //    public ICollection<Transaction> Transacoes { get; set; }
-    //    //public string Transacoes { get; set; }
-    //}
 }

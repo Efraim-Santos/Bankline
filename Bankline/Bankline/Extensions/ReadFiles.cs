@@ -38,7 +38,7 @@ namespace Bankline.Extensions
                             transacaoCorrente = SetValue.Transaction(transacaoCorrente, tagNameCurrent, valueTagNameCurrent);
                         }
 
-                        extract.Transacoes.Add(transacaoCorrente);
+                        extract.AllTransaction.Add(transacaoCorrente);
                     }
                 }
                 sr.Close();
@@ -50,6 +50,18 @@ namespace Bankline.Extensions
         private static string GetValueProperty(string propertyName, string line)
         {
             return line.Replace($"<{propertyName}>", string.Empty);
+        }
+
+        public static void RemoveFiles(string pathRootFiles)
+        {
+            string pathAllFiles = $"{pathRootFiles}\\ExtratosImportados\\";
+
+            var pathArchives = new DirectoryInfo(pathAllFiles);
+
+            foreach (FileInfo file in pathArchives.GetFiles())
+            {
+                file.Delete();
+            }
         }
     }
 }

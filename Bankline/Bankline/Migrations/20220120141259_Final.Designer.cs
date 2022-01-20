@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bankline.Migrations
 {
     [DbContext(typeof(BankDbContext))]
-    [Migration("20220105122731_AlteracaoNosDados")]
-    partial class AlteracaoNosDados
+    [Migration("20220120141259_Final")]
+    partial class Final
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,8 +43,6 @@ namespace Bankline.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("RegisterDate");
-
                     b.Property<string>("Type");
 
                     b.Property<decimal>("Value");
@@ -59,7 +57,7 @@ namespace Bankline.Migrations
             modelBuilder.Entity("Bankline.Models.TransactionModel", b =>
                 {
                     b.HasOne("Bankline.Models.BankStatementModel")
-                        .WithMany("Transacoes")
+                        .WithMany("Transaction")
                         .HasForeignKey("BankStatementModelId");
                 });
 #pragma warning restore 612, 618

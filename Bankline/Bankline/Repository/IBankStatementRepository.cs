@@ -10,5 +10,6 @@ namespace Bankline.Repository
     {
         Task AddNew(BankStatementModel bankStatement);
         Task<List<BankStatementModel>> GetAll();
+        Task<BankStatementModel> GetBankStatementByID(int id);
     }
 }

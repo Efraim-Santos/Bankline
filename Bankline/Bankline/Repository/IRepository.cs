@@ -9,6 +9,7 @@ namespace Bankline.Repository
     {
         Task AddNew(TEntity bankStatement);
         Task<List<TEntity>> GetAll();
+        Task<TEntity> GetById(int id);
         Task<int> SaveChagens();
     }
 }

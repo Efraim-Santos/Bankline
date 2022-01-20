@@ -1,0 +1,21 @@
+﻿<div class="container">
+    <h2>Resultado das transações</h2>
+
+    <div class="message" style="display: none;">
+        <div class="alert" role="alert"><span></span></div>
+    </div>
+
+    <partial name="~/Views/Shared/Partial/LoadValidationMessage.cshtml" />
+
+    <div class="my-4">
+        <button id="salvar" class="btn btn-success">Salvar Dados</button>
+        <button class="btn btn-primary" onclick="location.href='@Url.Action("Index", "ProcessFiles")'">Voltar</button>
+    </div>
+
+    @if (ViewData["Error"] == null)
+    {
+        <partial name="~/Views/BankStatement/Partial/Transaction.cshtml" />
+    }
+</div>
+
+<script src="~/js/bankStatement.js" asp-append-version="true"></script>

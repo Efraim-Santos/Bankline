@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Bankline.Extensions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,25 +10,28 @@ using System.Threading.Tasks;
 
 namespace Bankline.Controllers
 {
-    public class UploadFilesController : BaseController
+    public class ProcessFilesController : BaseController
     {
-        public UploadFilesController(IHostingEnvironment _appEnvironment) : base (_appEnvironment)
+        public ProcessFilesController(IHostingEnvironment _appEnvironment) : base (_appEnvironment)
         {
 
         }
         public IActionResult Index()
-            {
+        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendFiles(List<IFormFile> files)
+        public async Task<IActionResult> UploadFiles(List<IFormFile> files)
         {
             if (!files.Any())
             {
                 ViewData["Error"] = "Nenhum Arquivo foi selecionado";
                 return View("Index");
             }
+
+            ReadFiles.RemoveFiles(GetPathRootFiles());
+
             foreach (var formFile in files)
             {
                 if (formFile.Length > 0)
@@ -49,8 +53,14 @@ namespace Bankline.Controllers
                     }
                 }
             }
-            ViewData["Sucess"] = "Arquivos foram incluidos com sucesso!";
+            ViewData["Success"] = "Arquivos foram incluidos com sucesso!";
             return View("Index");
+        }
+        [HttpGet]
+        public ActionResult RemoveAllFiles()
+        {
+            ReadFiles.RemoveFiles(GetPathRootFiles());
+            return Ok();
         }
 
     }

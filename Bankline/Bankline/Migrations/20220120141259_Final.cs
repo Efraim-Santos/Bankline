@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bankline.Migrations
 {
-    public partial class Inicial : Migration
+    public partial class Final : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,8 @@ namespace Bankline.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    StatementPeriod = table.Column<string>(nullable: true)
+                    StatementPeriod = table.Column<string>(nullable: true),
+                    RegisterDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,8 +29,8 @@ namespace Bankline.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Type = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
-                    Valor = table.Column<decimal>(nullable: false),
-                    Descricao = table.Column<string>(nullable: true),
+                    Value = table.Column<decimal>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
                     BankStatementModelId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

@@ -41,8 +41,6 @@ namespace Bankline.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("RegisterDate");
-
                     b.Property<string>("Type");
 
                     b.Property<decimal>("Value");
@@ -57,7 +55,7 @@ namespace Bankline.Migrations
             modelBuilder.Entity("Bankline.Models.TransactionModel", b =>
                 {
                     b.HasOne("Bankline.Models.BankStatementModel")
-                        .WithMany("Transacoes")
+                        .WithMany("Transaction")
                         .HasForeignKey("BankStatementModelId");
                 });
 #pragma warning restore 612, 618

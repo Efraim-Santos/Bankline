@@ -1,82 +1,26 @@
-﻿@model BankStatementDefaultViewModel;
+﻿@{
+    ViewData["Title"] = "BankLine";
+}
+<div class="container">
 
-<h1>Resultado das transações</h1>
+    <h2>Formulario para envio do arquivo</h2>
 
-<partial name="~/Views/Shared/Partial/LoadValidationMessage.cshtml" />
+    <partial name="~/Views/Shared/Partial/LoadValidationMessage.cshtml" />
 
-<input type="button" class="btn btn-primary" id="salvar" value="Salvar Dados">
+    <form class="my-4" asp-controller="ProcessFiles" asp-action="UploadFiles" enctype="multipart/form-data" method="post">
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Selecionar Arquivo OFX</label>
+            <input class="form-control" type="file" name="files" id="formFile" multiple>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Upload">
+    </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Data</th>
-            <th scope="col">Tipo da Transação</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Descrição</th>
-        </tr>
-    </thead>
-    @if (Model.Transacoes.Count > 0)
-    {
-        <tbody>
-            @foreach (var transaction in Model.Transacoes)
-            {
-                <tr>
-                    <th scope="row">@transaction.Date</th>
-                    <td>@transaction.Type</td>
-                    <td>@transaction.Value</td>
-                    <td>@transaction.Description</td>
-                </tr>
-            }
-        </tbody>
-    }
-    else
-    {
-        <tbody>
-            <tr>
-                <th scope="row"></th>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-    }
+    <div class="my-2">
+        <button class="btn btn-success" onclick="location.href='@Url.Action("FetchSavedExtracts", "BankStatement")'">Carregar extratos salvos</button>
+        <button class="btn btn-success" onclick="location.href='@Url.Action("OrganizedExtracts", "BankStatement")'">Processar dados</button>
+    </div>
+</div>
 
-</table>
 
-<script>
-    var buttonSave = document.querySelector('#salvar').addEventListener("click", function (event) {
 
-        var dataTable = document.querySelectorAll('.table tbody tr');
-        var bankStatement = [];
 
-        for (var i = 0; i < dataTable.length; i++) {
-
-            var childernLine = dataTable[i].children;
-
-            bankStatement.push({
-                Trntype: childernLine[1].innerHTML,
-                Dtposted: childernLine[0].innerHTML,
-                Trnamt: childernLine[2].innerHTML,
-                Memo: childernLine[3].innerHTML
-            });
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/ProcessFiles/CreatedDBNewRegisterOfExtractBank",
-            data: JSON.stringify({ Transacoes: bankStatement }),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                console.log("sucesso");
-                console.log(result);
-                location.href = '@Url.Action("Index","UploadFiles")';
-            },
-            error: function (ex) {
-                console.log("erro");
-                console.log(ex)
-            }
-        });
-    });
-
-</script>

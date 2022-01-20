@@ -1,0 +1,37 @@
+﻿@model AllStatementBankSavedViewModel
+<h2>Extratos bancários salvos</h2>
+
+<button class="btn btn-secondary btn-sm my-3" onclick="location.href='@Url.Action("Index", "ProcessFiles")'">Voltar</button>
+
+<form asp-action="SearchExtractById">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Data do registro</th>
+                <th scope="col">Periodo do extrato</th>
+                <th scope="col">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListBankStatements.Count > 0)
+            {
+                @foreach (var transaction in Model.ListBankStatements)
+                {
+                    <tr>
+                        <td>@transaction.RegisterDate</td>
+                        <td>@transaction.StatementPeriod</td>
+                        <td>
+                            <button type="submit" class="btn btn-primary" name="Id" value="@transaction.Id" >Ver Extrato</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">Nenhum registro foi encontrado.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
